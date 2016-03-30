@@ -151,6 +151,16 @@ class Convolution( object ):
 
         net.tot_forward_flops += forward_flops
 
+        #TODO: outputMB instead of inputMB?
+        #format: layerName & inputH & inputW & nFilt & filtH & filtW & inputMB & filtersMB * flops
+        if net.args.print_dissertation_tex_table:
+            print name, '&',
+            print top.y, '&', top.x, '&', 
+            print filts.num, '&', filts.y, '&', filts.x, '&',
+            print pp_bytes(net.tot_in_bytes), '&', pp_bytes(net.tot_filt_bytes), '&', pp_flops(forward_flops)
+
+        #TODO: line in table for sum over all layers: inputMB, filtersMB, flops
+
         if net.args.per_layer:
             print name,
             print "FWD",pp_flops(forward_flops),pp_bytes(forward_bytes),
@@ -254,6 +264,8 @@ parser.add_argument('--per-layer', metavar='BOOL', type=int, default=0, help='1:
 parser.add_argument('--per-layer-in-info', metavar='BOOL', type=int, default=0, help='if non-zero print per-layer input dims info')
 parser.add_argument('--profile', metavar='BOOL', type=int, default=0, help='if non-zero print per-layer sorted profile')
 parser.add_argument('--print-tex-table-entry', metavar='BOOL', type=int, default=0, help='if non-zero print one-off tex table entry')
+parser.add_argument('--print-dissertation-tex-table', metavar='BOOL', type=int, default=0, help='if non-zero print one-off tex table entry')
+
 args = parser.parse_args()
 net = Net(args)
 per_layer_time = {}
