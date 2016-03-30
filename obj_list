@@ -11,18 +11,19 @@
 # may be empty. however, it will still function in order to disable
 # particular object files from being built if desired.
 
-[lmdb]
+[lmdb disable]
 # assume system defaults include needed include/lib dirs
 LDFLAGS := $(LDFLAGS) -llmdb
 
-[octave]
+[octave disable]
 CPPFLAGS := $(CPPFLAGS) -I/usr/include/octave-4.0.0 -I/usr/include/octave-4.0.0/octave
 LDFLAGS := $(LDFLAGS) -loctave -loctinterp
 
-[SDL2]
+[SDL2 disable]
 CPPFLAGS := $(CPPFLAGS) -I/usr/include/SDL2 -I/usr/local/include/SDL2
 LDFLAGS := $(LDFLAGS) -lSDL2 -lSDL2_ttf -lrt
 
+#[caffe disable]
 [caffe_pb gen_fn=caffe.pb.cc gen_fn=caffe.pb.h]
 LDFLAGS := $(LDFLAGS) -lprotobuf
 # manually add deps, since we can create this particular header, which
@@ -35,7 +36,7 @@ upgrade_proto.o : ../src/gen/caffe.pb.h
 
 
 [cuda]
-CPPFLAGS := $(CPPFLAGS) -I/usr/local/cuda/include
+CPPFLAGS := $(CPPFLAGS) -I/usr/local/cuda-7.5/include
 LDFLAGS := $(LDFLAGS) -L/usr/local/cuda/lib64 -lcudart -lcublas -lcurand -lcuda
 
 [nvrtc needs=cuda]
@@ -45,7 +46,8 @@ LDFLAGS := $(LDFLAGS) -lnvrtc
 LDFLAGS := $(LDFLAGS) -lOpenCL
 
 [caffe needs=cuda needs=caffe_pb]
-CAFFE_HOME := /home/moskewcz/git_work/caffe_dev
+#CAFFE_HOME := /home/moskewcz/git_work/caffe_dev
+CAFFE_HOME := /nscratch/forresti/caffe-bvlc-master
 CPPFLAGS := $(CPPFLAGS) -I$(CAFFE_HOME)/include -I$(CAFFE_HOME)/build/src
 LDFLAGS := $(LDFLAGS) -L$(CAFFE_HOME)/build/lib -lcaffe -lglog
 ifneq ($(shell diff -wq ../src/ext/caffe.proto ${CAFFE_HOME}/src/caffe/proto/caffe.proto ; echo $$? ),0)
