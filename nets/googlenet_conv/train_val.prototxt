@@ -14,7 +14,7 @@ layer {
   }
   data_param {
     source: "/scratch/datasets/imagenet_classification/ilsvrc12_train_lmdb"
-    batch_size: 16
+    batch_size: 1024
     backend: LMDB
   }
 }
@@ -33,7 +33,7 @@ layer {
   }
   data_param {
     source: "/scratch/datasets/imagenet_classification/ilsvrc12_val_lmdb"
-    batch_size: 50
+    batch_size: 1024
     backend: LMDB
   }
 }
