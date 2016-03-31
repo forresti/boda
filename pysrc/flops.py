@@ -85,6 +85,13 @@ class Net( object ):
     def add_op( self, op ): self.ops.append( op )
 
     def print_stats( self ):
+
+
+        if net.args.print_dissertation_tex_table:
+            print " & & & & & & & ", 
+            print pp_bytes(self.tot_in_bytes), "&", pp_bytes(self.tot_filt_bytes), "&", pp_flops(self.tot_forward_flops),
+            print "\\\ \hline"
+
         print "-- INPUT: RUNTIME=%ss --"% (args.runtime, )
         print "-- INPUT: POWER=%sW --" % (args.power, )
         if "data" in self.ndas: print "-- \"data\" node dims: ", self.ndas["data"].dims_info_str()
@@ -150,13 +157,16 @@ class Convolution( object ):
 
         net.tot_forward_flops += forward_flops
 
+        stride_int = [int(s) for s in stride.split(' ')]
+        #print stride_int
+
         #TODO: outputMB instead of inputMB?
         #format: layerName & inputH & inputW & nFilt & filtH & filtW & stride & inputMB & filtersMB & flops
         if net.args.print_dissertation_tex_table:
-            print name, '&',
+            print name.replace('_',''), '&', #converts 'conv_1' --> 'conv1'
             print top.y, '&', top.x, '&', 
-            print filts.num, '&', filts.y, '&', filts.x, '&', stride, '&',
-            print pp_bytes(net.tot_in_bytes), '&', pp_bytes(net.tot_filt_bytes), '&', pp_flops(forward_flops),
+            print filts.num, '&', filts.y, '&', filts.x, '&', stride_int[0], '&',
+            print pp_bytes(in_pels*4), '&', pp_bytes( (filts.dims_prod() + biases.dims_prod())*4 ), '&', pp_flops(forward_flops),
             print "\\\ \hline"
 
         #TODO: line in table for sum over all layers: inputMB, filtersMB, flops
@@ -271,19 +281,19 @@ net = Net(args)
 per_layer_time = {}
 
 if net.args.print_dissertation_tex_table:
-    print 'layerName & inputH & inputW & nFilt & filtH & filtW & stride & inputMB & filtersMB & flops \\\ \hline'
+    print 'layer & inputH & inputW & nFilt & filtH & filtW & stride & Qty of input (MB) & Qty of filters (MB) & Computation (FLOPS) \\\ \hline'
 
 
 # source cnet decl
 execfile( args.net_fn )
+
+net.print_stats()
 
 if 1:
     tot_inxp = 0
     for k,v in per_layer_time.iteritems():
         if k.endswith("_inxp"): tot_inxp += v
     print "total _inxp time: ", pp_secs(tot_inxp)
-
-net.print_stats()
 
 if net.args.profile:
     lts = [ (t,ln) for ln,t in per_layer_time.iteritems() ]
