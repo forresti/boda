@@ -88,7 +88,7 @@ class Net( object ):
 
 
         if net.args.print_dissertation_tex_table:
-            print " & & & & & & & ", 
+            print "total & & & & & & & ", 
             print pp_bytes(self.tot_in_bytes), "&", pp_bytes(self.tot_filt_bytes), "&", pp_flops(self.tot_forward_flops),
             print "\\\ \hline"
 
@@ -161,11 +161,11 @@ class Convolution( object ):
         #print stride_int
 
         #TODO: outputMB instead of inputMB?
-        #format: layerName & inputH & inputW & nFilt & filtH & filtW & stride & inputMB & filtersMB & flops
+        #format: layerName & nFilt & filtH & filtW & stride & inputH & inputW & inputMB & filtersMB & flops
         if net.args.print_dissertation_tex_table:
             print name.replace('_',''), '&', #converts 'conv_1' --> 'conv1'
-            print top.y, '&', top.x, '&', 
             print filts.num, '&', filts.y, '&', filts.x, '&', stride_int[0], '&',
+            print top.y, '&', top.x, '&', 
             print pp_bytes(in_pels*4), '&', pp_bytes( (filts.dims_prod() + biases.dims_prod())*4 ), '&', pp_flops(forward_flops),
             print "\\\ \hline"
 
@@ -281,7 +281,7 @@ net = Net(args)
 per_layer_time = {}
 
 if net.args.print_dissertation_tex_table:
-    print 'layer & inputH & inputW & nFilt & filtH & filtW & stride & Qty of input (MB) & Qty of filters (MB) & Computation (FLOPS) \\\ \hline'
+    print 'layer & nFilt & filtH & filtW & stride & inputH & inputW & Qty of input (MB) & Qty of filters (MB) & Computation (FLOPS) \\\ \hline'
 
 
 # source cnet decl
