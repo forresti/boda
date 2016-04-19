@@ -88,7 +88,7 @@ class Net( object ):
 
 
         if net.args.print_dissertation_tex_table:
-            print "total & & & & & & & ", 
+            print "total & & & & & ", 
             print pp_bytes(self.tot_in_bytes), "&", pp_bytes(self.tot_filt_bytes), "&", pp_flops(self.tot_forward_flops),
             print "\\\ \hline"
 
@@ -260,15 +260,28 @@ class Pooling( object ):
 
         stride_int = [int(s) for s in stride.split(' ')]
 
-        new_x = bot.x/stride_int[0] #TODO: round
-        print new_x
+        #TODO: correct calculation of new_x, using rounding and in_pad.
+        output_y = bot.y/stride_int[0] #TODO: round
+        output_x = bot.x/stride_int[0] #TODO: round
 
+        '''
+        print new_x
         print name
         print 'bot:', bot.x, bot.y, bot.num, bot.chan
         #print 'top.size:', top.size
         print 'in_pad:',in_pad
         print 'stride:',stride
+        '''
 
+        outputMB = 'TODO'
+        filtersMB = '0'
+        flops = '-'
+        
+        #TODO: automatically determine filter size (which doesn't seem to be in the out.py file)
+        filt_y = 3
+        filt_x = 3
+
+        dissertation_table_row(name, filt_y, filt_x, stride, bot.chan, output_y, output_x, outputMB, filtersMB, flops)
         #TODO: estimate of computation
 
 class LRN( object ): 
