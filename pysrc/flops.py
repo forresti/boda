@@ -121,6 +121,14 @@ class Net( object ):
 #format: layerName & filter HxW & stride & chansOut & output HxW & outputMB & filtersMB & flops
 def dissertation_table_row(name, filt_y, filt_x, stride, chansOut, output_y, output_x, outputMB, filtersMB, flops):
 
+        global net
+
+        #autofill with '1x' ... to be modified manually in latex
+        if net.args.ex:
+            outputMB = '1x'
+            filtersMB = '1x'
+            flops = '1x'
+
         print name.replace('_',''), '&', #converts 'conv_1' --> 'conv1'
         print '%dx%d'%(filt_y, filt_x), '&', stride, '&', chansOut, '&',
         print '%dx%d'%(output_y, output_x), '&', 
@@ -319,13 +327,21 @@ parser.add_argument('--per-layer-in-info', metavar='BOOL', type=int, default=0, 
 parser.add_argument('--profile', metavar='BOOL', type=int, default=0, help='if non-zero print per-layer sorted profile')
 parser.add_argument('--print-tex-table-entry', metavar='BOOL', type=int, default=0, help='if non-zero print one-off tex table entry')
 parser.add_argument('--print-dissertation-tex-table', metavar='BOOL', type=int, default=0, help='if non-zero print one-off tex table entry')
+parser.add_argument('--ex', metavar='BOOL', type=int, default=0, help='replace FLOPS with "1x" -- to be filled in with change in flops vs baseline.')
 
 args = parser.parse_args()
 net = Net(args)
 per_layer_time = {}
 
 if net.args.print_dissertation_tex_table:
-    print 'layer & filter HxW & stride & output channels & output HxW & Qty of output (MB) & Qty of filters (MB) & Computation (FLOPS) \\\ \hline'
+
+    if net.args.ex:
+        #print 1x, to be filled in with delta in computation
+        print 'layer & filter HxW & stride & output channels & output HxW & $\Delta$ Qty of output & $\Delta$ Qty of filters & $\Delta$ Qty of computation \\\ \hline'
+
+    else:
+        #print actual values
+        print 'layer & filter HxW & stride & output channels & output HxW & Qty of output (MB) & Qty of filters (MB) & Computation (FLOPS) \\\ \hline'
 
 
 # source cnet decl
