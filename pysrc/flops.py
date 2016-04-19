@@ -180,12 +180,6 @@ class Convolution( object ):
 
             dissertation_table_row(name, filts.y, filts.x, stride_int[0], filts.num, top.y, top.x, outputMB, filtersMB, flops) 
 
-            print name.replace('_',''), '&', #converts 'conv_1' --> 'conv1'
-            print filts.num, '&', '%dx%d'%(filts.y, filts.x), '&', stride_int[0], '&',
-            print '%dx%d'%(top.y, top.x), '&', 
-            print pp_bytes(in_pels*4), '&', pp_bytes( (filts.dims_prod() + biases.dims_prod())*4 ), '&', pp_flops(forward_flops),
-            print "\\\ \hline"
-
         #TODO: line in table for sum over all layers: inputMB, filtersMB, flops
 
         if net.args.per_layer:
