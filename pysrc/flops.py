@@ -178,6 +178,7 @@ class Convolution( object ):
             filtersMB = pp_bytes( (filts.dims_prod() + biases.dims_prod())*4 )
             flops = pp_flops(forward_flops)
 
+            #print row of table:
             dissertation_table_row(name, filts.y, filts.x, stride_int[0], filts.num, top.y, top.x, outputMB, filtersMB, flops) 
 
         #TODO: line in table for sum over all layers: inputMB, filtersMB, flops
