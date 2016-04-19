@@ -122,7 +122,7 @@ class Net( object ):
 def dissertation_table_row(name, filt_y, filt_x, stride, chansOut, output_y, output_x, outputMB, filtersMB, flops):
 
         print name.replace('_',''), '&', #converts 'conv_1' --> 'conv1'
-        print chansOut, '&', '%dx%d'%(filt_y, filt_x), '&', stride, '&',
+        print '%dx%d'%(filt_y, filt_x), '&', stride, '&', chansOut, '&',
         print '%dx%d'%(output_y, output_x), '&', 
         print outputMB, '&', filtersMB, '&', flops,
         print "\\\ \hline"
