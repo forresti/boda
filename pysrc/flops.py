@@ -161,11 +161,11 @@ class Convolution( object ):
         #print stride_int
 
         #TODO: outputMB instead of inputMB?
-        #format: layerName & nFilt & filtH & filtW & stride & inputH & inputW & inputMB & filtersMB & flops
+        #format: layerName & filter HxW & stride & chansOut & output HxW & outputMB & filtersMB & flops
         if net.args.print_dissertation_tex_table:
             print name.replace('_',''), '&', #converts 'conv_1' --> 'conv1'
-            print filts.num, '&', filts.y, '&', filts.x, '&', stride_int[0], '&',
-            print top.y, '&', top.x, '&', 
+            print filts.num, '&', '%dx%d'%(filts.y, filts.x), '&', stride_int[0], '&',
+            print '%dx%d'%(top.y, top.x), '&', 
             print pp_bytes(in_pels*4), '&', pp_bytes( (filts.dims_prod() + biases.dims_prod())*4 ), '&', pp_flops(forward_flops),
             print "\\\ \hline"
 
@@ -240,6 +240,8 @@ InnerProduct=Convolution
 # stubs to ignore for now
 class Pooling( object ): 
     def __init__( self, **kwargs ): self.opts = kwargs
+    #def __init__( self, name, bot_names, top_names, in_pad, stride, kern_sz, out_chans=0, conv_has_relu=0 ): 
+    #   do I want to inherit the previous conv layer's out_chans?
 class LRN( object ): 
     def __init__( self, **kwargs ): self.opts = kwargs
 class Concat( object ): 
@@ -281,7 +283,7 @@ net = Net(args)
 per_layer_time = {}
 
 if net.args.print_dissertation_tex_table:
-    print 'layer & nFilt & filtH & filtW & stride & inputH & inputW & Qty of input (MB) & Qty of filters (MB) & Computation (FLOPS) \\\ \hline'
+    print 'layer & filter HxW & stride & channelsOut & output HxW & Qty of output (MB) & Qty of filters (MB) & Computation (FLOPS) \\\ \hline'
 
 
 # source cnet decl
