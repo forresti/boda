@@ -281,7 +281,7 @@ class Pooling( object ):
         filt_y = 3
         filt_x = 3
 
-        dissertation_table_row(name, filt_y, filt_x, stride, bot.chan, output_y, output_x, outputMB, filtersMB, flops)
+        dissertation_table_row(name, filt_y, filt_x, stride_int[0], bot.chan, output_y, output_x, outputMB, filtersMB, flops)
         #TODO: estimate of computation
 
 class LRN( object ): 
@@ -325,7 +325,7 @@ net = Net(args)
 per_layer_time = {}
 
 if net.args.print_dissertation_tex_table:
-    print 'layer & filter HxW & stride & channelsOut & output HxW & Qty of output (MB) & Qty of filters (MB) & Computation (FLOPS) \\\ \hline'
+    print 'layer & filter HxW & stride & output channels & output HxW & Qty of output (MB) & Qty of filters (MB) & Computation (FLOPS) \\\ \hline'
 
 
 # source cnet decl
