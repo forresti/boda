@@ -117,6 +117,18 @@ class Net( object ):
                     pp_val_part(float(self.tot_in_bytes)/float(self.tot_filt_bytes), 1), 
                     pp_flops(flops)  ) )
 
+
+#format: layerName & filter HxW & stride & chansOut & output HxW & outputMB & filtersMB & flops
+def dissertation_table_row(name, filt_y, filt_x, stride, chansOut, output_y, output_x, outputMB, filtersMB, flops):
+
+        print name.replace('_',''), '&', #converts 'conv_1' --> 'conv1'
+        print chansOut, '&', '%dx%d'%(filt_y, filt_x), '&', stride, '&',
+        print '%dx%d'%(output_y, output_x), '&', 
+        print outputMB, '&', filtersMB, '&', flops,
+        print "\\\ \hline"
+
+
+
 class Convolution( object ): 
     def __init__( self, name, bot_names, top_names, in_pad, stride, kern_sz, out_chans=0, conv_has_relu=0 ): 
         # note: ignores in_pad and stride, but they sort-of aren't
@@ -160,9 +172,14 @@ class Convolution( object ):
         stride_int = [int(s) for s in stride.split(' ')]
         #print stride_int
 
-        #TODO: outputMB instead of inputMB?
         #format: layerName & filter HxW & stride & chansOut & output HxW & outputMB & filtersMB & flops
         if net.args.print_dissertation_tex_table:
+            outputMB = pp_bytes(in_pels*4)
+            filtersMB = pp_bytes( (filts.dims_prod() + biases.dims_prod())*4 )
+            flops = pp_flops(forward_flops)
+
+            dissertation_table_row(name, filts.y, filts.x, stride_int[0], filts.num, top.y, top.x, outputMB, filtersMB, flops) 
+
             print name.replace('_',''), '&', #converts 'conv_1' --> 'conv1'
             print filts.num, '&', '%dx%d'%(filts.y, filts.x), '&', stride_int[0], '&',
             print '%dx%d'%(top.y, top.x), '&', 
@@ -239,9 +256,26 @@ InnerProduct=Convolution
 
 # stubs to ignore for now
 class Pooling( object ): 
-    def __init__( self, **kwargs ): self.opts = kwargs
-    #def __init__( self, name, bot_names, top_names, in_pad, stride, kern_sz, out_chans=0, conv_has_relu=0 ): 
-    #   do I want to inherit the previous conv layer's out_chans?
+    #def __init__( self, **kwargs ): self.opts = kwargs
+    def __init__( self, name, bot_names, top_names, in_pad, stride, kern_sz, out_chans=0, avg_pool=0):
+        bot = net.ndas[bot_names[0]]
+        #top = net.ndas[bot_names[1]]
+
+        #TODO: handle globalpool?
+
+        stride_int = [int(s) for s in stride.split(' ')]
+
+        new_x = bot.x/stride_int[0] #TODO: round
+        print new_x
+
+        print name
+        print 'bot:', bot.x, bot.y, bot.num, bot.chan
+        #print 'top.size:', top.size
+        print 'in_pad:',in_pad
+        print 'stride:',stride
+
+        #TODO: estimate of computation
+
 class LRN( object ): 
     def __init__( self, **kwargs ): self.opts = kwargs
 class Concat( object ): 
