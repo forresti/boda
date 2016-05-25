@@ -182,7 +182,7 @@ class Convolution( object ):
 
         #format: layerName & filter HxW & stride & chansOut & output HxW & outputMB & filtersMB & flops
         if net.args.print_dissertation_tex_table:
-            outputMB = pp_bytes(in_pels*4)
+            outputMB = pp_bytes(out_pels*4)
             filtersMB = pp_bytes( (filts.dims_prod() + biases.dims_prod())*4 )
             flops = pp_flops(forward_flops)
 
